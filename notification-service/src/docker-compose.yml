@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  notification-service:
+    build: .
+    ports:
+      - "5003:5003"
+    environment:
+        RABBITMQ_URL: "amqp://booking-rabbitmq:5672"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - shared-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: booking-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - shared-network
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      retries: 5
+
+networks:
+  shared-network:
+    driver: bridge
