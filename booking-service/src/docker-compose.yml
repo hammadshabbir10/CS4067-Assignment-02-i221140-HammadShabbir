@@ -1,0 +1,46 @@
+services:
+  booking-service:
+    build: .
+    ports:
+      - "5002:5002"
+    depends_on:
+      - postgres
+      - rabbitmq
+    environment:
+      DATABASE_URL: "postgresql://postgres:mostwanted3z@postgres:5432/bookingdb"
+      RABBITMQ_URL: "amqp://rabbitmq"
+    networks:
+      - shared-network
+    volumes:
+       - /app/node_modules
+
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: booking-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mostwanted3z
+    ports:
+      - "5433:5432"
+    volumes:
+      - booking_postgres_data:/var/lib/postgresql/data
+    networks:
+      - shared-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: booking-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - shared-network
+
+networks:
+  shared-network:
+    name: shared-network
+    driver: bridge
+
+volumes:
+  booking_postgres_data:
