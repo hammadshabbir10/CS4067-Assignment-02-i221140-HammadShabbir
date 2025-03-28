@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: online-event-booking-hammad
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1  # ✅ Rewrite target
+    nginx.ingress.kubernetes.io/use-regex: "true"    # ✅ Enable regex
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: event-booking.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: microservice-dashboard-service
+            port:
+              number: 8080
+
+      - path: /api/users/(.*)
+        pathType: ImplementationSpecific  # ✅ Supports regex
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 80
+
+      - path: /api/events/(.*)
+        pathType: ImplementationSpecific  # ✅ Supports regex
+        backend:
+          service:
+            name: event-service
+            port:
+              number: 80
+
+      - path: /api/bookings/(.*)
+        pathType: ImplementationSpecific  # ✅ Supports regex
+        backend:
+          service:
+            name: booking-service
+            port:
+              number: 80

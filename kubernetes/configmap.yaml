@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: online-event-booking-hammad
+data:
+  DATABASE_URL: "jdbc:postgresql://postgres-service:5432/userdb"
+  API_USER_SERVICE: "http://event-booking.local/api/users"
+  API_BOOKING_SERVICE: "http://event-booking.local/api/bookings"
+  API_EVENT_SERVICE: "http://event-booking.local/api/events"
+  API_NOTIFICATION_SERVICE: "http://event-booking.local/api/notifications"
