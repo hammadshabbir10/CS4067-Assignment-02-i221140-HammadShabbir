@@ -1,0 +1,44 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  namespace: online-event-booking-hammad
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: event-booking.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: microservice-dashboard-service  # ✅ Corrected
+            port:
+              number: 8080  # ✅ Corrected
+
+      - path: /api/users
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port:
+              number: 80  # ✅ Match the actual port
+
+      - path: /api/events
+        pathType: Prefix
+        backend:
+          service:
+            name: event-service
+            port:
+              number: 80  # ✅ Match the actual port
+
+      - path: /api/bookings
+        pathType: Prefix
+        backend:
+          service:
+            name: booking-service
+            port:
+              number: 80  # ✅ Match the actual port
